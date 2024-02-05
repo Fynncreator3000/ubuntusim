@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        #taskbar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            background-color: #2c2c2c;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        #startButton {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        #startMenu {
+            display: none;
+            position: fixed;
+            width: 200px;
+            background-color: #2c2c2c;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        .startMenuItem {
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .startMenuItem:hover {
+            background-color: #3c3c3c;
+        }
+
+        .window {
+            display: none;
+            position: absolute;
+            width: 400px;
+            height: 300px;
+            background-color: #ffffff;
+            border: 1px solid #000000;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            z-index: 3;
+        }
+
+        .windowHeader {
+            background-color: #2c2c2c;
+            color: #ffffff;
+            padding: 8px;
+            cursor: move;
+            user-select: none;
+        }
+
+        .windowContent {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="taskbar">
+    <button id="startButton">Start</button>
+    <div id="startMenu">
+        <div class="startMenuItem" onclick="openProgram('notepad')">Notepad</div>
+    </div>
+</div>
+
+<div id="notepad" class="window">
+    <div class="windowHeader" onmousedown="startDragging(event, 'notepad')">Notepad</div>
+    <div class="windowContent">
+        <textarea style="width: 100%; height: 100%;"></textarea>
+    </div>
+</div>
+
+<script>
+    const startButton = document.getElementById('startButton');
+    const startMenu = document.getElementById('startMenu');
+
+    startButton.addEventListener('click', () => {
+        startMenu.style.display = (startMenu.style.display === 'block') ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', (event) => {
+        if (event.target !== startButton && event.target !== startMenu) {
+            startMenu.style.display = 'none';
+        }
+    });
+
+    function openProgram(programName) {
+        const programWindow = document.getElementById(programName);
+        programWindow.style.display = 'block';
+    }
+
+    function startDragging(event, windowId) {
+        const windowElement = document.getElementById(windowId);
+        let offsetX = event.clientX - windowElement.getBoundingClientRect().left;
+        let offsetY = event.clientY - windowElement.getBoundingClientRect().top;
+
+        function moveWindow(event) {
+            const x = event.clientX - offsetX;
+            const y = event.clientY - offsetY;
+
+            windowElement.style.left = `${x}px`;
+            windowElement.style.top = `${y}px`;
+        }
+
+        function stopDragging() {
+            document.removeEventListener('mousemove', moveWindow);
+            document.removeEventListener('mouseup', stopDragging);
+        }
+
+        document.addEventListener('mousemove', moveWindow);
+        document.addEventListener('mouseup', stopDragging);
+    }
+</script>
+
+</body>
+</html>
