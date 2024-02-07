@@ -80,6 +80,16 @@
             padding: 10px;
         }
 
+        .calculatorButton {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
         .paintButton {
             background-color: #ff9800;
             color: white;
@@ -102,6 +112,7 @@
     <button id="startButton">Start</button>
     <div id="startMenu">
         <div class="startMenuItem" onclick="openProgram('notepad')">Notepad</div>
+        <div class="startMenuItem" onclick="openProgram('calculator')">Calculator</div>
         <div class="startMenuItem" onclick="openProgram('paint')">Paint</div>
     </div>
 </div>
@@ -110,6 +121,14 @@
     <div class="windowHeader" onmousedown="startDragging(event, 'notepad')">Notepad</div>
     <div class="windowContent">
         <textarea style="width: 100%; height: 100%;"></textarea>
+    </div>
+</div>
+
+<div id="calculator" class="window">
+    <div class="windowHeader" onmousedown="startDragging(event, 'calculator')">Calculator</div>
+    <div class="windowContent">
+        <input type="text" id="calcInput" style="width: calc(100% - 20px); margin-bottom: 10px;"><br>
+        <button class="calculatorButton" onclick="calculate()">Calculate</button>
     </div>
 </div>
 
@@ -159,6 +178,16 @@
 
         document.addEventListener('mousemove', moveWindow);
         document.addEventListener('mouseup', stopDragging);
+    }
+
+    function calculate() {
+        const input = document.getElementById('calcInput').value;
+        try {
+            const result = eval(input);
+            alert(`Result: ${result}`);
+        } catch (error) {
+            alert('Invalid expression!');
+        }
     }
 
     // Paint App
